@@ -6,57 +6,82 @@
     <title>Stoxtrac | AI Stock Analysis</title>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0f172a; color: white; text-align: center; padding: 40px 20px; }
-        .container { max-width: 600px; margin: auto; background: #1e293b; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
-        h1 { color: #38bdf8; margin-bottom: 5px; }
+        .container { max-width: 700px; margin: auto; background: #1e293b; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
+        h1 { color: #38bdf8; margin-bottom: 5px; font-size: 2.5em; }
         .setup-box { background: #334155; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 0.9em; }
         input { padding: 12px; width: calc(100% - 24px); border-radius: 6px; border: 1px solid #475569; background: #0f172a; color: white; margin-bottom: 15px; }
-        button { padding: 12px 24px; background: #38bdf8; color: #0f172a; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 1em; width: 100%; transition: 0.2s; }
+        button { padding: 15px 24px; background: #38bdf8; color: #0f172a; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 1.1em; width: 100%; transition: 0.2s; }
         button:hover { background: #7dd3fc; }
-        #results { margin-top: 25px; text-align: left; line-height: 1.6; background: #0f172a; padding: 20px; border-radius: 8px; display: none; white-space: pre-wrap; }
+        
+        /* New Chart & Results Styling */
+        #chart-container { margin-top: 25px; display: none; border-radius: 8px; overflow: hidden; }
+        #results { margin-top: 20px; text-align: left; line-height: 1.8; background: #0f172a; padding: 25px; border-radius: 8px; display: none; white-space: pre-wrap; font-size: 1.05em; }
         .loader { display: none; margin-top: 20px; color: #38bdf8; font-style: italic; }
+        
+        /* New Disclaimer Styling */
+        .disclaimer { margin-top: 40px; font-size: 0.75em; color: #94a3b8; text-align: justify; line-height: 1.4; border-top: 1px solid #334155; padding-top: 15px; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Stoxtrac AI</h1>
-        <p>Advanced Market & Political Sentiment Analysis</p>
+        <h1>Stoxtrac</h1>
+        <p>Advanced AI Market & Political Sentiment Analysis</p>
         
         <div class="setup-box">
             <label for="apiKey" style="display:block; text-align:left; margin-bottom:5px;">OpenAI API Key (For your eyes only):</label>
             <input type="password" id="apiKey" placeholder="sk-proj-...">
         </div>
 
-        <input type="text" id="ticker" placeholder="Enter Stock Ticker (e.g., TSLA, AAPL)" style="font-size: 1.1em; text-transform: uppercase;">
+        <input type="text" id="ticker" placeholder="Enter Stock Ticker (e.g., TSLA, AAPL)" style="font-size: 1.2em; text-transform: uppercase;">
         <button onclick="analyzeStock()">Analyze Stock</button>
         
-        <div id="loading" class="loader">Stoxtrac AI is analyzing data... please wait.</div>
+        <div id="loading" class="loader">Stoxtrac AI is analyzing political trends and market data...</div>
+        
+        <div id="chart-container"></div>
+
         <div id="results"></div>
+
+        <div class="disclaimer">
+            <strong>DISCLAIMER:</strong> Stoxtrac is an artificial intelligence tool designed for informational and educational purposes only. The analyses, price targets, and political sentiment summaries provided do not constitute financial, investment, or legal advice. Market conditions change rapidly, and AI can make errors. Always conduct your own research and consult with a licensed financial advisor before making any investment decisions. By using this tool, you assume full responsibility for your trading actions.
+        </div>
     </div>
 
     <script>
         async function analyzeStock() {
             const apiKey = document.getElementById('apiKey').value;
-            const ticker = document.getElementById('ticker').value.toUpperCase();
+            let ticker = document.getElementById('ticker').value.toUpperCase().trim();
             const resultsDiv = document.getElementById('results');
             const loadingDiv = document.getElementById('loading');
+            const chartDiv = document.getElementById('chart-container');
 
             if (!apiKey || !ticker) {
                 alert("Please enter both your API Key and a Stock Ticker.");
                 return;
             }
 
-            // Hide previous results, show loading
+            // Show loading, hide old results
             resultsDiv.style.display = 'none';
+            chartDiv.style.display = 'none';
             loadingDiv.style.display = 'block';
 
-            // The System Prompt: Giving your AI its personality and rules
-            const systemPrompt = `You are the elite Stoxtrac AI Financial Analyst. 
-            Analyze the stock ticker provided by the user.
-            Provide your analysis in clear sections:
-            1. Political & News Trend: What is the current macro/political sentiment affecting this sector?
-            2. Technical Outlook: Short-term vs Long-term view.
-            3. Action Plan: Provide a realistic "Buy Price" and "Profit Take (Sell) Price".
-            Keep it professional, concise, and formatted easily for reading.`;
+            // Option 1 Action: Inject the live TradingView Chart
+            chartDiv.innerHTML = `<iframe src="https://s.tradingview.com/widgetembed/?symbol=${ticker}&interval=D&theme=dark" width="100%" height="400" frameborder="0" allowtransparency="true" scrolling="no"></iframe>`;
+
+            // Option 3 Action: The Smarter AI Prompt
+            const systemPrompt = `You are the Stoxtrac AI, an elite financial and geopolitical analyst. 
+            Analyze the stock ticker provided. You must format your response EXACTLY like this:
+
+            ### 📰 Political & Macro Trend
+            (Analyze current news, the 'Trump Effect' if applicable, tariffs, or specific government policies impacting this sector).
+
+            ### 📉 Technical Analysis
+            (State clearly if the outlook is Short-term or Long-term. Mention key support/resistance levels).
+
+            ### 🎯 Stoxtrac Action Plan
+            **Verdict:** [Bullish / Bearish / Neutral]
+            **Short-Term Buy Price:** [$X.XX]
+            **Short-Term Take Profit (Sell):** [$X.XX]
+            **Long-Term Outlook:** [1-2 sentences on long-term viability]`;
 
             try {
                 const response = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -66,7 +91,7 @@
                         'Authorization': 'Bearer ' + apiKey
                     },
                     body: JSON.stringify({
-                        model: 'gpt-4o-mini', // Using the fast, cheap model
+                        model: 'gpt-4o-mini',
                         messages: [
                             { role: 'system', content: systemPrompt },
                             { role: 'user', content: 'Analyze this stock: ' + ticker }
@@ -87,8 +112,9 @@
                 resultsDiv.innerHTML = "Connection Error. Please check your internet or API key.";
             }
 
-            // Hide loading, show results
+            // Hide loading, show chart and results
             loadingDiv.style.display = 'none';
+            chartDiv.style.display = 'block';
             resultsDiv.style.display = 'block';
         }
     </script>
