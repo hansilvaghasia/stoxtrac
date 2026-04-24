@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stoxtrac | AI Stock Analysis</title>
+    <style>
+        body { font-family: sans-serif; background: #0f172a; color: white; text-align: center; padding: 50px; }
+        .container { max-width: 600px; margin: auto; background: #1e293b; padding: 30px; border-radius: 15px; }
+        input { padding: 10px; width: 70%; border-radius: 5px; border: none; }
+        button { padding: 10px 20px; background: #38bdf8; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        #results { margin-top: 30px; text-align: left; line-height: 1.6; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Stoxtrac AI</h1>
+        <p>Analyze political trends and market sentiment.</p>
+        <input type="text" id="ticker" placeholder="Enter Ticker (e.g. TSLA)">
+        <button onclick="analyzeStock()">Analyze</button>
+        <div id="results">Enter a stock to see the AI breakdown...</div>
+    </div>
+    <script>
+        function analyzeStock() {
+            const ticker = document.getElementById('ticker').value;
+            document.getElementById('results').innerHTML = "Analyzing " + ticker + " for political impact and price targets...";
+            // We will connect the AI Brain here in the next step!
+        }
+    </script>
+</body>
+</html>
