@@ -3,51 +3,162 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stoxtrac | AI Stock Analysis</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700;900&display=swap" rel="stylesheet">
+    <title>Stoxtrac | AI Stock Chat</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background: linear-gradient(135deg, #0f172a 0%, #020617 100%); color: #f8fafc; text-align: center; padding: 40px 15px; margin: 0; min-height: 100vh; }
-        .container { max-width: 700px; margin: auto; background: rgba(30, 41, 59, 0.6); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); padding: 40px 30px; border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.05); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
-        h1 { margin-bottom: 5px; font-size: 3em; font-weight: 900; background: linear-gradient(to right, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -1px; }
-        p.subtitle { color: #94a3b8; font-size: 1.1em; margin-bottom: 30px; font-weight: 300; }
-        .setup-box { background: rgba(0, 0, 0, 0.2); padding: 15px; border-radius: 10px; margin-bottom: 25px; border: 1px solid rgba(56, 189, 248, 0.2); text-align: left; }
-        .status-msg { font-size: 0.85em; color: #4ade80; display: none; margin-top: 5px; font-weight: 500; }
-        input { padding: 16px; width: calc(100% - 32px); border-radius: 8px; border: 1px solid #334155; background: rgba(15, 23, 42, 0.8); color: white; margin-bottom: 15px; font-size: 1.1em; transition: all 0.3s ease; }
-        input:focus { outline: none; border-color: #38bdf8; box-shadow: 0 0 10px rgba(56, 189, 248, 0.2); }
-        button { padding: 16px 24px; background: linear-gradient(to right, #38bdf8, #2563eb); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 1.2em; width: 100%; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3); }
-        button:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(56, 189, 248, 0.5); }
-        #chart-container { margin-top: 30px; display: none; border-radius: 10px; overflow: hidden; border: 1px solid #334155; }
-        #results { margin-top: 25px; text-align: left; line-height: 1.8; background: rgba(15, 23, 42, 0.6); padding: 30px; border-radius: 12px; display: none; white-space: pre-wrap; font-size: 1.05em; border: 1px solid #334155; color: #e2e8f0; }
-        .loader { display: none; margin-top: 20px; color: #38bdf8; font-style: italic; font-weight: 500;}
-        .disclaimer { margin-top: 40px; font-size: 0.75em; color: #64748b; text-align: justify; line-height: 1.5; border-top: 1px solid #334155; padding-top: 20px; }
+        /* Base Chat UI Styling (ChatGPT/Gemini Style) */
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #212121; /* Classic Dark Mode */
+            color: #ececec; 
+            margin: 0; 
+            display: flex; 
+            flex-direction: column; 
+            height: 100vh; 
+        }
+
+        /* Top Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 25px;
+            background-color: #171717;
+            border-bottom: 1px solid #333;
+        }
+        .logo { font-size: 1.5em; font-weight: 700; color: #fff; letter-spacing: -0.5px; }
+        .logo span { color: #38bdf8; }
+        .settings-btn { background: transparent; color: #a1a1aa; border: none; cursor: pointer; font-size: 1em; transition: 0.2s; }
+        .settings-btn:hover { color: #fff; }
+
+        /* Hidden Settings Panel */
+        #settings-panel {
+            display: none;
+            background-color: #2f2f2f;
+            padding: 20px;
+            border-bottom: 1px solid #444;
+            text-align: left;
+        }
+        #settings-panel input {
+            width: 100%;
+            max-width: 400px;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #555;
+            background: #171717;
+            color: white;
+            margin-top: 10px;
+        }
+        .status-msg { font-size: 0.85em; color: #4ade80; margin-top: 8px; display: none; }
+
+        /* Scrollable Chat Area */
+        #chat-container {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 20px 0;
+            display: flex;
+            flex-direction: column;
+            scroll-behavior: smooth;
+        }
+
+        /* Chat Bubbles */
+        .message-wrapper { padding: 25px; border-bottom: 1px solid #333; display: flex; justify-content: center; }
+        .message-wrapper.user { background-color: #212121; }
+        .message-wrapper.ai { background-color: #2f2f2f; }
+        
+        .message-content { max-width: 800px; width: 100%; line-height: 1.7; font-size: 1.05em; }
+        
+        /* Labels for Messages */
+        .sender-label { font-weight: 700; margin-bottom: 10px; font-size: 1.1em; }
+        .user-label { color: #ececec; }
+        .ai-label { color: #38bdf8; }
+
+        /* Chat Chart Container */
+        .chat-chart { margin-top: 20px; border-radius: 8px; overflow: hidden; border: 1px solid #444; }
+        
+        /* Bottom Input Area */
+        #input-area {
+            padding: 25px;
+            background-color: #212121;
+            display: flex;
+            justify-content: center;
+        }
+        .input-box {
+            display: flex;
+            align-items: center;
+            background-color: #2f2f2f;
+            border: 1px solid #444;
+            border-radius: 25px;
+            padding: 10px 20px;
+            max-width: 800px;
+            width: 100%;
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+        }
+        .input-box input {
+            flex-grow: 1;
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 1.1em;
+            outline: none;
+            text-transform: uppercase;
+        }
+        .input-box button {
+            background-color: #ececec;
+            color: #212121;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .input-box button:hover { background-color: #38bdf8; color: white; }
+
+        .disclaimer { text-align: center; font-size: 0.75em; color: #666; padding: 10px; background: #212121; }
+        .loader { font-style: italic; color: #a1a1aa; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Stoxtrac</h1>
-        <p class="subtitle">Advanced AI Market & Political Sentiment Analysis</p>
-        
-        <div class="setup-box">
-            <label for="apiKey" style="display:block; margin-bottom:8px; color: #cbd5e1; font-weight: 500; font-size: 0.9em;">OpenAI API Key (Stored locally on your device):</label>
-            <input type="password" id="apiKey" placeholder="sk-proj-...">
-            <div id="keyStatus" class="status-msg">✅ Key loaded from secure local memory.</div>
-        </div>
 
-        <input type="text" id="ticker" placeholder="Enter Stock Ticker (e.g., TSLA, AAPL)" style="font-size: 1.2em; text-transform: uppercase; font-weight: 700; text-align: center;">
-        <button onclick="analyzeStock()">Analyze Stock</button>
-        
-        <div id="loading" class="loader">Gathering live data & political sentiment...</div>
-        
-        <div id="chart-container"></div>
-        <div id="results"></div>
+    <header>
+        <div class="logo">Stox<span>trac</span></div>
+        <button class="settings-btn" onclick="toggleSettings()">⚙️ Settings</button>
+    </header>
 
-        <div class="disclaimer">
-            <strong>DISCLAIMER:</strong> Stoxtrac is an artificial intelligence tool designed for informational and educational purposes only. The analyses, price targets, and political sentiment summaries provided do not constitute financial, investment, or legal advice. Market conditions change rapidly, and AI can make errors. Always conduct your own research and consult with a licensed financial advisor before making any investment decisions. By using this tool, you assume full responsibility for your trading actions.
+    <div id="settings-panel">
+        <label style="color: #a1a1aa; font-size: 0.9em;">OpenAI API Key (Saved locally)</label>
+        <input type="password" id="apiKey" placeholder="Paste your sk-proj-... key here" oninput="saveKey()">
+        <div id="keyStatus" class="status-msg">✅ Key loaded securely.</div>
+    </div>
+
+    <div id="chat-container">
+        <div class="message-wrapper ai">
+            <div class="message-content">
+                <div class="sender-label ai-label">Stoxtrac AI</div>
+                Welcome. I am your elite financial and geopolitical analyst. Enter a stock ticker below to generate a comprehensive report including the "Trump Effect" macro trends, technical analysis, and specific buy/sell targets.
+            </div>
         </div>
     </div>
 
+    <div id="input-area">
+        <div class="input-box">
+            <input type="text" id="ticker" placeholder="ENTER TICKER (e.g. TSLA)" onkeypress="handleEnter(event)">
+            <button onclick="analyzeStock()">↑</button>
+        </div>
+    </div>
+
+    <div class="disclaimer">
+        Stoxtrac AI can make mistakes. Consider verifying important information. Not financial advice.
+    </div>
+
     <script>
-        // NEW FEATURE: On page load, check if we have a saved key!
+        // Load API Key on start
         window.onload = function() {
             const savedKey = localStorage.getItem('stoxtrac_api_key');
             if (savedKey) {
@@ -56,34 +167,68 @@
             }
         };
 
+        // Toggle Settings Panel
+        function toggleSettings() {
+            const panel = document.getElementById('settings-panel');
+            panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
+        }
+
+        // Save Key to Local Storage
+        function saveKey() {
+            const key = document.getElementById('apiKey').value;
+            localStorage.setItem('stoxtrac_api_key', key);
+            document.getElementById('keyStatus').style.display = 'block';
+        }
+
+        // Allow pressing Enter to send
+        function handleEnter(e) {
+            if (e.key === 'Enter') analyzeStock();
+        }
+
         async function analyzeStock() {
             const apiKey = document.getElementById('apiKey').value;
-            let ticker = document.getElementById('ticker').value.toUpperCase().trim();
-            const resultsDiv = document.getElementById('results');
-            const loadingDiv = document.getElementById('loading');
-            const chartDiv = document.getElementById('chart-container');
-            const keyStatus = document.getElementById('keyStatus');
+            const tickerInput = document.getElementById('ticker');
+            const ticker = tickerInput.value.toUpperCase().trim();
+            const chatContainer = document.getElementById('chat-container');
 
-            if (!apiKey || !ticker) {
-                alert("Please enter both your API Key and a Stock Ticker.");
+            if (!apiKey) {
+                alert("Please click '⚙️ Settings' and add your API Key first.");
                 return;
             }
+            if (!ticker) return;
 
-            // NEW FEATURE: Save the key to local storage so we don't need to type it next time
-            localStorage.setItem('stoxtrac_api_key', apiKey);
-            keyStatus.style.display = 'block';
+            // 1. Add User Message to Chat
+            chatContainer.innerHTML += `
+                <div class="message-wrapper user">
+                    <div class="message-content">
+                        <div class="sender-label user-label">You</div>
+                        Analyze ${ticker}
+                    </div>
+                </div>
+            `;
+            
+            // Clear input box
+            tickerInput.value = '';
 
-            resultsDiv.style.display = 'none';
-            chartDiv.style.display = 'none';
-            loadingDiv.style.display = 'block';
+            // 2. Add "Loading" AI Message
+            const loadingId = 'loading-' + Date.now();
+            chatContainer.innerHTML += `
+                <div class="message-wrapper ai" id="${loadingId}">
+                    <div class="message-content">
+                        <div class="sender-label ai-label">Stoxtrac AI</div>
+                        <div class="loader">Researching political trends and market data for ${ticker}...</div>
+                    </div>
+                </div>
+            `;
+            
+            // Scroll to bottom
+            chatContainer.scrollTop = chatContainer.scrollHeight;
 
-            chartDiv.innerHTML = `<iframe src="https://s.tradingview.com/widgetembed/?symbol=${ticker}&interval=D&theme=dark" width="100%" height="400" frameborder="0" allowtransparency="true" scrolling="no"></iframe>`;
-
-            const systemPrompt = `You are the Stoxtrac AI, an elite financial and geopolitical analyst. 
-            Analyze the stock ticker provided. You must format your response EXACTLY like this:
+            const systemPrompt = `You are Stoxtrac AI, an elite financial and geopolitical analyst. 
+            Analyze the stock ticker. Format your response EXACTLY like this:
 
             ### 📰 Political & Macro Trend
-            (Analyze current news, the 'Trump Effect' if applicable, tariffs, or specific government policies impacting this sector).
+            (Analyze current news, geopolitical effects, tariffs, or specific government policies impacting this sector).
 
             ### 📉 Technical Analysis
             (State clearly if the outlook is Short-term or Long-term. Mention key support/resistance levels).
@@ -112,20 +257,30 @@
                 });
 
                 const data = await response.json();
+                const loadingDiv = document.getElementById(loadingId);
                 
                 if (data.error) {
-                    resultsDiv.innerHTML = "Error: " + data.error.message;
+                    loadingDiv.innerHTML = `<div class="message-content"><div class="sender-label ai-label">Stoxtrac AI</div>Error: ${data.error.message}</div>`;
                 } else {
-                    resultsDiv.innerHTML = data.choices[0].message.content;
+                    // Inject TradingView Chart AND the AI response
+                    const aiText = data.choices[0].message.content;
+                    const chartHTML = `<div class="chat-chart"><iframe src="https://s.tradingview.com/widgetembed/?symbol=${ticker}&interval=D&theme=dark" width="100%" height="400" frameborder="0" allowtransparency="true" scrolling="no"></iframe></div>`;
+                    
+                    loadingDiv.innerHTML = `
+                        <div class="message-content">
+                            <div class="sender-label ai-label">Stoxtrac AI</div>
+                            ${chartHTML}
+                            <div style="margin-top: 20px; white-space: pre-wrap;">${aiText}</div>
+                        </div>
+                    `;
                 }
 
             } catch (error) {
-                resultsDiv.innerHTML = "Connection Error. Please check your internet or API key.";
+                document.getElementById(loadingId).innerHTML = `<div class="message-content"><div class="sender-label ai-label">Stoxtrac AI</div>Connection Error. Check internet or API key.</div>`;
             }
 
-            loadingDiv.style.display = 'none';
-            chartDiv.style.display = 'block';
-            resultsDiv.style.display = 'block';
+            // Scroll to bottom again after results load
+            chatContainer.scrollTop = chatContainer.scrollHeight;
         }
     </script>
 </body>
