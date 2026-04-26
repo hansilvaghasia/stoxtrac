@@ -6,12 +6,10 @@
     <title>StoxTrac | Financial Terminal</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        /* --- ELITE FINTECH DESIGN SYSTEM --- */
         :root {
-            /* Bloomberg/Stripe Dark Theme */
-            --bg-body: #05080f; /* Deepest navy */
-            --bg-surface: #0a0f1c; /* Terminal surface */
-            --bg-panel: #111827; /* Elevated cards */
+            --bg-body: #05080f; 
+            --bg-surface: #0a0f1c; 
+            --bg-panel: #111827; 
             --text-main: #f3f4f6;
             --text-secondary: #9ca3af;
             --border-light: rgba(255, 255, 255, 0.08);
@@ -50,7 +48,6 @@
             transition: 0.2s;
         }
 
-        /* --- 1. TOP NAV --- */
         header {
             height: 56px; display: flex; justify-content: space-between; align-items: center;
             padding: 0 24px; background-color: var(--bg-surface); border-bottom: 1px solid var(--border-light);
@@ -68,10 +65,8 @@
         .icon-btn { background: transparent; color: var(--text-secondary); border: none; cursor: pointer; font-size: 1.1em; transition: 0.2s; display: flex; align-items: center;}
         .icon-btn:hover { color: var(--text-main); }
 
-        /* --- LAYOUT STRUCTURE --- */
         .app-container { display: flex; height: calc(100vh - 56px); width: 100%; }
 
-        /* --- 2. LEFT SIDEBAR --- */
         .sidebar {
             width: 260px; background: var(--bg-surface); border-right: 1px solid var(--border-light);
             display: flex; flex-direction: column; padding: 20px 16px; flex-shrink: 0;
@@ -88,14 +83,12 @@
         .side-item {
             padding: 8px; border-radius: 6px; color: var(--text-secondary); font-size: 0.85em; font-weight: 500;
             cursor: pointer; transition: 0.15s; display: flex; align-items: center; gap: 10px;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         }
         .side-item:hover { background: var(--bg-panel); color: var(--text-main); }
-        .side-item.active { background: var(--bg-panel); color: var(--text-main); box-shadow: inset 3px 0 0 var(--brand-blue); }
-
-        /* --- 3. MAIN WORKSPACE --- */
+        
         .workspace { flex-grow: 1; background: var(--bg-body); position: relative; overflow-y: auto; }
 
-        /* STATE 1: EMPTY (Focus Input) */
         .empty-state { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px; animation: fadeIn 0.4s; }
         .empty-title { font-size: 2em; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 30px; }
         
@@ -114,7 +107,6 @@
         .prompt-pill { background: transparent; border: 1px solid var(--border-light); color: var(--text-secondary); padding: 6px 14px; border-radius: 20px; font-size: 0.8em; font-weight: 500; cursor: pointer; transition: 0.2s; }
         .prompt-pill:hover { background: var(--bg-panel); color: var(--text-main); border-color: var(--text-secondary); }
 
-        /* STATE 2: LOADING */
         .loading-state { display: none; height: 100%; flex-direction: column; align-items: center; justify-content: center; padding: 40px; }
         .loading-box { background: var(--bg-surface); border: 1px solid var(--border-light); border-radius: 12px; padding: 30px; width: 100%; max-width: 450px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
         .load-step { margin-bottom: 20px; }
@@ -123,13 +115,12 @@
         .progress-track { width: 100%; height: 6px; background: var(--bg-body); border-radius: 3px; overflow: hidden; border: 1px solid var(--border-light); }
         .progress-fill { height: 100%; background: var(--brand-blue); width: 0%; border-radius: 3px; }
 
-        /* STATE 3: REPORT VIEW */
-        .report-state { display: none; padding: 30px; max-width: 1400px; margin: 0 auto; animation: fadeIn 0.5s; }
+        /* ANALYST REPORT STATE */
+        .report-state { display: none; padding: 40px; max-width: 1200px; margin: 0 auto; animation: fadeIn 0.5s; }
         
         .report-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid var(--border-light); }
         .ticker-title { font-size: 2.2em; font-weight: 800; letter-spacing: -1px; display: flex; align-items: center; gap: 12px; margin-bottom: 4px; }
         .company-name { font-size: 0.45em; color: var(--text-secondary); font-weight: 500; letter-spacing: 0; background: var(--bg-panel); padding: 4px 10px; border-radius: 6px; border: 1px solid var(--border-light); }
-        .price-badge { font-size: 1.2em; font-weight: 600; color: var(--text-main); }
         
         .rating-box { text-align: right; }
         .rating-label { font-size: 0.7em; text-transform: uppercase; color: var(--text-secondary); font-weight: 700; letter-spacing: 1px; margin-bottom: 4px; }
@@ -141,43 +132,31 @@
         .report-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; }
         @media (max-width: 1000px) { .report-grid { grid-template-columns: 1fr; } }
 
-        /* LEFT PANEL (70%) */
-        .card { background: var(--bg-surface); border: 1px solid var(--border-light); border-radius: 12px; padding: 24px; margin-bottom: 24px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        .card-title { font-size: 0.85em; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+        .card { background: var(--bg-surface); border: 1px solid var(--border-light); border-radius: 12px; padding: 24px; margin-bottom: 24px; }
+        .card-title { font-size: 0.8em; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; border-bottom: 1px solid var(--border-light); padding-bottom: 8px;}
         
-        .summary-text { font-size: 1.05em; line-height: 1.6; color: var(--text-main); }
+        .summary-text { font-size: 1.05em; line-height: 1.6; color: var(--text-main); font-weight: 500;}
         
-        .bull-bear-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .bb-side h4 { font-size: 0.9em; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+        .bullet-list { list-style: none; }
+        .bullet-list li { font-size: 0.95em; color: var(--text-main); margin-bottom: 12px; padding-left: 16px; position: relative; line-height: 1.5; }
+        .bullet-list li::before { content: '•'; position: absolute; left: 0; color: var(--text-secondary); font-weight: bold;}
+
+        .bull-bear-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+        .bb-side h4 { font-size: 0.85em; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px;}
         .bull-title { color: var(--bullish); }
         .bear-title { color: var(--bearish); }
-        .bb-list { list-style: none; }
-        .bb-list li { font-size: 0.9em; color: var(--text-secondary); margin-bottom: 8px; padding-left: 16px; position: relative; line-height: 1.5; }
-        .bb-list li::before { content: '•'; position: absolute; left: 0; color: var(--text-main); }
 
         .risk-list { list-style: none; }
-        .risk-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border-light); }
+        .risk-item { display: flex; justify-content: space-between; align-items: flex-start; padding: 12px 0; border-bottom: 1px solid var(--border-light); gap: 15px;}
         .risk-item:last-child { border-bottom: none; }
-        .risk-text { font-size: 0.95em; color: var(--text-main); }
-        .risk-sev { font-size: 0.75em; font-weight: 700; padding: 4px 10px; border-radius: 4px; text-transform: uppercase; }
+        .risk-text { font-size: 0.9em; color: var(--text-main); line-height: 1.4;}
+        .risk-sev { font-size: 0.7em; font-weight: 700; padding: 4px 8px; border-radius: 4px; text-transform: uppercase; flex-shrink: 0;}
         .sev-High { background: var(--bearish-bg); color: var(--bearish); }
         .sev-Medium { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
         .sev-Low { background: var(--bg-panel); color: var(--text-secondary); }
 
-        /* RIGHT PANEL (30%) */
         .chart-container { width: 100%; height: 250px; border-radius: 8px; overflow: hidden; border: 1px solid var(--border-light); margin-bottom: 24px; }
-        
-        .target-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
-        .target-box { background: var(--bg-panel); border: 1px solid var(--border-light); padding: 16px; border-radius: 8px; text-align: center; }
-        .target-box span { display: block; font-size: 0.75em; color: var(--text-secondary); text-transform: uppercase; font-weight: 600; margin-bottom: 6px; }
-        .target-box strong { font-size: 1.3em; color: var(--text-main); }
 
-        .stats-list { list-style: none; }
-        .stat-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border-light); font-size: 0.9em; }
-        .stat-item span { color: var(--text-secondary); }
-        .stat-item strong { font-weight: 600; }
-
-        /* SETTINGS MODAL */
         #settings-modal { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 200; align-items: center; justify-content: center; }
         .modal-content { background: var(--bg-surface); border: 1px solid var(--border-light); padding: 30px; border-radius: 12px; width: 400px; box-shadow: 0 25px 50px rgba(0,0,0,0.3); }
         .modal-content h3 { margin-bottom: 15px; font-size: 1.2em; }
@@ -217,15 +196,14 @@
             
             <div class="sidebar-section">
                 <div class="section-label">Recent Searches</div>
-                <div id="recent-list">
-                    </div>
+                <div id="recent-list"></div>
             </div>
             
             <div class="sidebar-section">
                 <div class="section-label">Explore Markets</div>
-                <div class="side-item" onclick="triggerSearch('TSLA')">⚡ TSLA (Tesla)</div>
-                <div class="side-item" onclick="triggerSearch('NVDA')">🧠 NVDA (Nvidia)</div>
-                <div class="side-item" onclick="triggerSearch('AAPL')">🍏 AAPL (Apple)</div>
+                <div class="side-item" onclick="triggerSearch('TSLA')">TSLA (Tesla)</div>
+                <div class="side-item" onclick="triggerSearch('NVDA')">NVDA (Nvidia)</div>
+                <div class="side-item" onclick="triggerSearch('AAPL')">AAPL (Apple)</div>
             </div>
         </aside>
 
@@ -239,24 +217,24 @@
                     <button class="btn-generate" onclick="startAnalysis()">Generate</button>
                 </div>
                 <div class="quick-prompts">
-                    <button class="prompt-pill" onclick="triggerSearch('Analyze NVDA growth')">Analyze NVDA growth</button>
-                    <button class="prompt-pill" onclick="triggerSearch('Is TSLA overvalued?')">Is TSLA overvalued?</button>
-                    <button class="prompt-pill" onclick="triggerSearch('Macro risks for AAPL')">Macro risks for AAPL</button>
+                    <button class="prompt-pill" onclick="triggerSearch('Analyze NVDA growth drivers')">Analyze NVDA growth drivers</button>
+                    <button class="prompt-pill" onclick="triggerSearch('Is TSLA currently overvalued?')">Is TSLA currently overvalued?</button>
+                    <button class="prompt-pill" onclick="triggerSearch('Identify macro risks for AAPL')">Identify macro risks for AAPL</button>
                 </div>
             </div>
 
             <div class="loading-state" id="loading-state">
                 <div class="loading-box">
                     <div class="load-step">
-                        <div class="load-label"><span>Aggregating financials...</span> <span id="p1">0%</span></div>
+                        <div class="load-label"><span>Compiling financial data...</span> <span id="p1">0%</span></div>
                         <div class="progress-track"><div class="progress-fill" id="bar1"></div></div>
                     </div>
                     <div class="load-step">
-                        <div class="load-label"><span>Evaluating macro risks...</span> <span id="p2">0%</span></div>
+                        <div class="load-label"><span>Evaluating macro context...</span> <span id="p2">0%</span></div>
                         <div class="progress-track"><div class="progress-fill" id="bar2"></div></div>
                     </div>
                     <div class="load-step">
-                        <div class="load-label"><span>Structuring report...</span> <span id="p3">0%</span></div>
+                        <div class="load-label"><span>Structuring analyst report...</span> <span id="p3">0%</span></div>
                         <div class="progress-track"><div class="progress-fill" id="bar3"></div></div>
                     </div>
                 </div>
@@ -273,12 +251,11 @@
             <h3 style="color: var(--text-main);">API Configuration</h3>
             <p style="font-size: 0.85em; color: var(--text-secondary); margin-bottom: 15px;">Stored securely in local browser storage.</p>
             <input type="password" id="apiKey" placeholder="sk-proj-...">
-            <button class="btn-save" onclick="saveSettings()">Save & Close</button>
+            <button class="btn-save" onclick="saveSettings()">Save Configuration</button>
         </div>
     </div>
 
     <script>
-        // --- 1. INITIALIZATION & UTILS ---
         window.onload = function() {
             if (localStorage.getItem('stoxtrac_key')) {
                 document.getElementById('apiKey').value = localStorage.getItem('stoxtrac_key');
@@ -288,7 +265,6 @@
             document.getElementById('mainInput').focus();
         };
 
-        // Keyboard Shortcut: Press '/' to focus search
         document.addEventListener('keydown', function(e) {
             if (e.key === '/' && document.activeElement.id !== 'mainInput' && document.activeElement.id !== 'apiKey') {
                 e.preventDefault();
@@ -323,37 +299,45 @@
             startAnalysis();
         }
 
-        // --- SIDEBAR LOGIC ---
         function updateSidebar() {
             const history = JSON.parse(localStorage.getItem('stox_history') || '[]');
             const list = document.getElementById('recent-list');
             list.innerHTML = history.length === 0 ? '<div style="font-size:0.8em; color:var(--text-secondary); padding: 0 8px;">No recent searches</div>' : '';
             history.forEach(item => {
-                list.innerHTML += `<div class="side-item" onclick="triggerSearch('${item}')">⏱️ ${item}</div>`;
+                list.innerHTML += `<div class="side-item" onclick="triggerSearch('${item}')">${item}</div>`;
             });
         }
 
-        // --- 2. THE AI ENGINE (JSON FORCED) ---
-        // We instruct the AI to return strict JSON so we can populate the grid perfectly.
-        const systemPrompt = `You are an elite institutional financial terminal. 
-        Analyze the user's query and return the data STRICTLY as a JSON object with this exact structure:
+        // --- NEW ELITE PROMPT SYSTEM ---
+        const systemPrompt = `You are an elite institutional equity research analyst.
+        Assume today's market context and recent trends. Incorporate realistic, current market dynamics where relevant.
+        Prioritize non-obvious insights over commonly known facts.
+
+        Your task is to generate a structured, decision-focused investment report on the user's query.
+
+        IMPORTANT:
+        - Be concise, specific, and analytical — not generic.
+        - Avoid fluff, vague statements, and phrases like "this depends on many factors".
+        - Focus on decision-making insights, not descriptions.
+        - Use clear structure and bullet points.
+        - If data is uncertain, make reasonable assumptions and state them.
+        - Write like a professional analyst. No emojis, no hype.
+
+        Return the output strictly in clean JSON with the following fields EXACTLY:
         {
-          "ticker": "The main stock ticker (e.g. NVDA)",
+          "ticker": "Main stock ticker (e.g. NVDA)",
           "companyName": "Full company name",
           "rating": "BULLISH, BEARISH, or NEUTRAL",
-          "summary": "A 2-3 sentence executive summary.",
-          "bullCase": ["Point 1", "Point 2"],
-          "bearCase": ["Point 1", "Point 2"],
+          "summary": "2-3 sentences. Clear stance and key reason.",
+          "thesis": ["Bullet 1 on core drivers", "Bullet 2", "Bullet 3"],
+          "bull_case": ["Upside driver 1", "Upside driver 2", "Upside driver 3"],
+          "bear_case": ["Real risk 1", "Real risk 2", "Real risk 3"],
+          "valuation": "Is it overvalued, fairly valued, or undervalued? Why? (multiples, growth)",
           "risks": [
-            {"factor": "Risk description", "severity": "High"},
-            {"factor": "Risk description", "severity": "Medium"}
+            {"name": "Specific risk description", "level": "High"},
+            {"name": "Specific risk description", "level": "Medium"}
           ],
-          "valuation": "1 sentence on current valuation.",
-          "buyTarget": "Price or N/A",
-          "takeProfit": "Price or N/A",
-          "macro": "1 sentence on macro/geopolitical exposure.",
-          "peRatio": "Est P/E",
-          "marketCap": "Est Cap"
+          "macro": ["Macro point 1 (rates, geopolitics, etc.)", "Macro point 2"]
         }`;
 
         async function startAnalysis() {
@@ -363,24 +347,20 @@
             if (!apiKey) { openSettings(); return; }
             if (!query) return;
 
-            // Save to history
             let history = JSON.parse(localStorage.getItem('stox_history') || '[]');
-            if(!history.includes(query)) { history.unshift(query); if(history.length>5) history.pop(); }
+            if(!history.includes(query)) { history.unshift(query); if(history.length>8) history.pop(); }
             localStorage.setItem('stox_history', JSON.stringify(history));
             updateSidebar();
 
-            // UI Transitions
             document.getElementById('empty-state').style.display = 'none';
             document.getElementById('report-state').style.display = 'none';
             document.getElementById('loading-state').style.display = 'flex';
 
-            // Animate Loading Bars
             animateBar('bar1', 'p1', 800);
             setTimeout(() => animateBar('bar2', 'p2', 1200), 800);
             setTimeout(() => animateBar('bar3', 'p3', 1500), 2000);
 
             try {
-                // The API Call
                 const response = await fetch('https://api.openai.com/v1/chat/completions', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey },
@@ -390,20 +370,16 @@
                             { role: 'system', content: systemPrompt },
                             { role: 'user', content: query }
                         ],
-                        response_format: { type: "json_object" }, // FORCE JSON OUTPUT
-                        temperature: 0.3 // Lower temp for factual, structured output
+                        response_format: { type: "json_object" },
+                        temperature: 0.3 
                     })
                 });
 
                 const data = await response.json();
-                
                 if (data.error) throw new Error(data.error.message);
                 
-                // Parse the JSON returned by the AI
                 const reportData = JSON.parse(data.choices[0].message.content);
-                
-                // Build and display the UI
-                buildReportUI(reportData);
+                buildReportUI(reportData, query);
 
             } catch (error) {
                 alert("Terminal Error: " + error.message);
@@ -411,7 +387,6 @@
             }
         }
 
-        // Fake loading bar logic for psychological effect
         function animateBar(barId, textId, duration) {
             const bar = document.getElementById(barId);
             const text = document.getElementById(textId);
@@ -426,33 +401,36 @@
             }, duration / 10);
         }
 
-        // --- 3. DYNAMIC UI BUILDER ---
-        function buildReportUI(data) {
+        function buildReportUI(data, originalQuery) {
             const reportState = document.getElementById('report-state');
             
-            // Build Bull/Bear lists
-            const bullHtml = data.bullCase.map(item => `<li>${item}</li>`).join('');
-            const bearHtml = data.bearCase.map(item => `<li>${item}</li>`).join('');
+            // Build Array HTML
+            const thesisHtml = data.thesis.map(item => `<li>${item}</li>`).join('');
+            const bullHtml = data.bull_case.map(item => `<li>${item}</li>`).join('');
+            const bearHtml = data.bear_case.map(item => `<li>${item}</li>`).join('');
+            const macroHtml = data.macro.map(item => `<li>${item}</li>`).join('');
             
-            // Build Risks list
             const risksHtml = data.risks.map(r => `
                 <li class="risk-item">
-                    <span class="risk-text">${r.factor}</span>
-                    <span class="risk-sev sev-${r.severity}">${r.severity}</span>
+                    <span class="risk-text">${r.name}</span>
+                    <span class="risk-sev sev-${r.level}">${r.level}</span>
                 </li>
             `).join('');
 
-            // Chart Theme
+            const isLikelyTicker = originalQuery.length <= 6 && !originalQuery.includes(' ');
             const chartTheme = document.body.classList.contains('light-mode') ? 'light' : 'dark';
+            const chartHTML = isLikelyTicker ? `
+                <div class="chart-container">
+                    <iframe src="https://s.tradingview.com/widgetembed/?symbol=${data.ticker}&interval=D&theme=${chartTheme}&hidesidetoolbar=1&symboledit=1" width="100%" height="100%" frameborder="0" allowtransparency="true" scrolling="no"></iframe>
+                </div>` : '';
 
-            // Inject the HTML Grid
             reportState.innerHTML = `
                 <div class="report-header">
                     <div>
                         <div class="ticker-title">${data.ticker} <span class="company-name">${data.companyName}</span></div>
                     </div>
                     <div class="rating-box">
-                        <div class="rating-label">Overall Rating</div>
+                        <div class="rating-label">Analyst Rating</div>
                         <div class="rating-value ${data.rating}">${data.rating}</div>
                     </div>
                 </div>
@@ -460,64 +438,55 @@
                 <div class="report-grid">
                     <div class="report-left">
                         <div class="card">
-                            <div class="card-title">📝 Executive Summary</div>
+                            <div class="card-title">Executive Summary</div>
                             <div class="summary-text">${data.summary}</div>
                         </div>
 
                         <div class="card">
-                            <div class="card-title">⚖️ Bull vs Bear Thesis</div>
-                            <div class="bull-bear-grid">
-                                <div class="bb-side">
-                                    <h4 class="bull-title">Bull Case</h4>
-                                    <ul class="bb-list">${bullHtml}</ul>
-                                </div>
-                                <div class="bb-side">
-                                    <h4 class="bear-title">Bear Case</h4>
-                                    <ul class="bb-list">${bearHtml}</ul>
-                                </div>
-                            </div>
+                            <div class="card-title">Investment Thesis</div>
+                            <ul class="bullet-list">${thesisHtml}</ul>
                         </div>
 
                         <div class="card">
-                            <div class="card-title">⚠️ Macro & Geopolitical Risks</div>
-                            <p style="font-size: 0.9em; color: var(--text-secondary); margin-bottom: 12px; line-height: 1.5;">${data.macro}</p>
-                            <ul class="risk-list">${risksHtml}</ul>
+                            <div class="card-title">Bull vs Bear Case</div>
+                            <div class="bull-bear-grid">
+                                <div class="bb-side">
+                                    <h4 class="bull-title">Upside Drivers</h4>
+                                    <ul class="bullet-list">${bullHtml}</ul>
+                                </div>
+                                <div class="bb-side">
+                                    <h4 class="bear-title">Downside Risks</h4>
+                                    <ul class="bullet-list">${bearHtml}</ul>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
                     <div class="report-right">
-                        <div class="chart-container">
-                            <iframe src="https://s.tradingview.com/widgetembed/?symbol=${data.ticker}&interval=D&theme=${chartTheme}&hidesidetoolbar=1&symboledit=1" width="100%" height="100%" frameborder="0" allowtransparency="true" scrolling="no"></iframe>
+                        ${chartHTML}
+
+                        <div class="card">
+                            <div class="card-title">Valuation View</div>
+                            <p style="font-size: 0.95em; color: var(--text-main); line-height: 1.5;">${data.valuation}</p>
                         </div>
 
-                        <div class="target-grid">
-                            <div class="target-box">
-                                <span>Entry Target</span>
-                                <strong>${data.buyTarget}</strong>
-                            </div>
-                            <div class="target-box">
-                                <span>Take Profit</span>
-                                <strong>${data.takeProfit}</strong>
-                            </div>
+                        <div class="card">
+                            <div class="card-title">Macro & Geopolitical Exposure</div>
+                            <ul class="bullet-list">${macroHtml}</ul>
                         </div>
 
-                        <div class="card" style="padding: 16px;">
-                            <div class="card-title" style="margin-bottom: 10px;">📊 Key Metrics</div>
-                            <ul class="stats-list">
-                                <li class="stat-item"><span>Valuation</span> <strong>${data.valuation}</strong></li>
-                                <li class="stat-item"><span>Est. P/E</span> <strong>${data.peRatio}</strong></li>
-                                <li class="stat-item"><span>Market Cap</span> <strong>${data.marketCap}</strong></li>
-                            </ul>
+                        <div class="card">
+                            <div class="card-title">Key Risk Matrix</div>
+                            <ul class="risk-list">${risksHtml}</ul>
                         </div>
                     </div>
                 </div>
             `;
 
-            // Hide Loading, Show Report
             setTimeout(() => {
                 document.getElementById('loading-state').style.display = 'none';
                 reportState.style.display = 'block';
-            }, 500); // slight delay to let loading bars finish visually
+            }, 600); 
         }
     </script>
 </body>
